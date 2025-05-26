@@ -54,6 +54,20 @@ button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr); /* 6 columnas */
+  gap: 16px; /* Espaciado entre elementos */
+}
+
+.grid-item {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+}
+
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
