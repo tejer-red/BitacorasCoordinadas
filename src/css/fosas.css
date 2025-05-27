@@ -1,0 +1,129 @@
+.fosas-container {
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+}
+
+.fosas-container .map-container {
+  width: 100%;
+  height: 100%;
+}
+
+.fosas-container .sidebar-container {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 295px;
+    height: calc(100% - 20px);
+    overflow-y: scroll;
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 10px;
+    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.fosas-container .sidebar-container.mobile {
+  position: absolute;
+  top: auto;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  width: calc(100% - 2rem);
+  height: 15%; /* Default height for mobile */
+  overflow-y: scroll;
+  background-color: rgba(255, 255, 255, 0.9);
+  padding: 1rem;
+  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+  transition: height 0.3s ease, top 0.3s ease; /* Smooth transition for height and position */
+}
+
+.fosas-container .sidebar-container.mobile.expanded {
+  height: 30%; /* Expanded height for mobile */
+}
+
+.fosas-container .sidebar-container.mobile.full-page {
+  top: 0;
+  bottom: 0;
+  height: 85%; /* Full-page height */
+  z-index: 102; /* Ensure it appears above other elements */
+  overflow-y: auto; /* Ensure scrolling works in full-page mode */
+}
+
+.fosas-container .search-input {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.fosas-container .select-dropdown {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.fosas-container .fosas-list {
+  margin-bottom: 20px;
+}
+
+.fosas-container .fosas-list-item {
+  margin-bottom: 20px;
+}
+
+.fosas-container .fosas-list-item h2 {
+  cursor: pointer;
+  color: blue;
+}
+
+.fosas-container .fosas-list-item img {
+  max-width: 100%;
+  height: auto;
+  margin-bottom: 10px;
+}
+
+.fosas-container .fosas-link {
+  color: inherit;
+  text-decoration: underline;
+}
+
+.fosas-container .maplibregl-ctrl-attrib.maplibregl-compact .maplibregl-ctrl-attrib-inner,
+.fosas-container .maplibregl-ctrl-bottom-right  {
+    display: none;
+}
+
+.fosas.mobile .fosas-container .sidebar-container {
+    position: absolute;
+    top: auto;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    width: calc(100% - 2rem);
+    overflow-y: scroll;
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 1rem;
+    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.fosas.mobile .fosas-container .search-input {
+  width: calc(100% - 20px);
+  margin-bottom: 10px;
+}
+
+.toggle-sidebar-button {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  text-align: center;
+}
+
+.toggle-sidebar-button:hover {
+  background-color: #0056b3;
+}
