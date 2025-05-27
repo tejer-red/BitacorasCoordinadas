@@ -4,12 +4,13 @@ import Bitacoras from './pages/Bitacoras';
 import Fosas from './pages/Fosas';
 import Indicios from './pages/Indicios';
 import Introduccion from './pages/Introduccion';
-import isMobile from './util/isMobile'; // Import the utility function
-import "./css/App.css";
+import isMobile from './util/isMobile';
+import "./css/style.css";
+import { Button, Navigation } from '@canonical/react-components'; // Removed Logo and Footer
 
 function App() {
   const location = useLocation();
-  const [isMenuOpen, setIsMenuOpen] = useState(false); // State to manage menu visibility
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isMobileDevice, setIsMobileDevice] = useState(false);
 
   useEffect(() => {
@@ -20,7 +21,6 @@ function App() {
     setIsMenuOpen(!isMenuOpen);
   };
 
-  // Determine the className based on the current route
   const getPageClassName = () => {
     switch (location.pathname) {
       case '/informacion':
@@ -49,38 +49,35 @@ function App() {
                 className="mobile-logo-image"
               />
             </Link>
-            <button className="hamburger-button" onClick={toggleMenu}>
+            <Button appearance="base" onClick={toggleMenu}>
               ☰
-            </button>
+            </Button>
           </div>
           {isMenuOpen && (
             <div className="mobile-menu">
               <div className="mobile-menu-header">
-                <button className="close-button" onClick={toggleMenu}>
+                <Button appearance="negative" onClick={toggleMenu}>
                   ✖
-                </button>
+                </Button>
               </div>
-              <div className="mobile-menu-buttons">
-                <Link to="/informacion" className="sidebar-button" onClick={toggleMenu}>
-                  Información
-                </Link>
-                <Link to="/diarios" className="sidebar-button" onClick={toggleMenu}>
-                  Diarios de Campo
-                </Link>
-                <Link to="/fosas" className="sidebar-button" onClick={toggleMenu}>
-                  Fosas
-                </Link>
-                <Link to="/indicios" className="sidebar-button" onClick={toggleMenu}>
-                  Indicios
-                </Link>
-              </div>
-              <p className="sidebar-footer">
-                <strong>Coordinadas</strong> es una iniciativa de{' '}
-                <a href="https://tejer.red">tejer.red</a> que articula herramientas 
-                digitales construidas junto a colectivos de búsqueda para registrar, 
-                compartir y visibilizar hallazgos de forma autónoma, segura y 
-                descentralizada.
-              </p>
+              <Navigation
+                logo={{ url: "https://tejer.red/logo.png", title: "Bitácoras Coordinadas" }} // Provide a valid logo prop
+                items={[
+                  { label: 'Información', url: '/informacion', onClick: toggleMenu },
+                  { label: 'Diarios de Campo', url: '/diarios', onClick: toggleMenu },
+                  { label: 'Fosas', url: '/fosas', onClick: toggleMenu },
+                  { label: 'Indicios', url: '/indicios', onClick: toggleMenu },
+                ]}
+              />
+              <footer>
+                <p>
+                  <strong>Coordinadas</strong> es una iniciativa de{' '}
+                  <a href="https://tejer.red">tejer.red</a> que articula herramientas 
+                  digitales construidas junto a colectivos de búsqueda para registrar, 
+                  compartir y visibilizar hallazgos de forma autónoma, segura y 
+                  descentralizada.
+                </p>
+              </footer>
             </div>
           )}
         </>
@@ -95,27 +92,24 @@ function App() {
               />
             </Link>
           </div>
-          <div className="sidebar-buttons">
-            <Link to="/informacion" className="sidebar-button">
-              Información
-            </Link>
-            <Link to="/diarios" className="sidebar-button">
-              Diarios de Campo
-            </Link>
-            <Link to="/fosas" className="sidebar-button">
-              Fosas
-            </Link>
-            <Link to="/indicios" className="sidebar-button">
-              Indicios
-            </Link>
-          </div>
-          <p className="sidebar-footer">
-            <strong>Coordinadas</strong> es una iniciativa de{' '}
-            <a href="https://tejer.red">tejer.red</a> que articula herramientas 
-            digitales construidas junto a colectivos de búsqueda para registrar, 
-            compartir y visibilizar hallazgos de forma autónoma, segura y 
-            descentralizada.
-          </p>
+          <Navigation
+            logo={{ url: "https://tejer.red/logo.png", title: "Bitácoras Coordinadas" }} // Provide a valid logo prop
+            items={[
+              { label: 'Información', url: '/informacion' },
+              { label: 'Diarios de Campo', url: '/diarios' },
+              { label: 'Fosas', url: '/fosas' },
+              { label: 'Indicios', url: '/indicios' },
+            ]}
+          />
+          <footer>
+            <p>
+              <strong>Coordinadas</strong> es una iniciativa de{' '}
+              <a href="https://tejer.red">tejer.red</a> que articula herramientas 
+              digitales construidas junto a colectivos de búsqueda para registrar, 
+              compartir y visibilizar hallazgos de forma autónoma, segura y 
+              descentralizada.
+            </p>
+          </footer>
         </div>
       )}
 
