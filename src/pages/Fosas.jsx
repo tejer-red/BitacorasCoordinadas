@@ -2,14 +2,22 @@ import React, { useEffect, useState, useRef } from 'react';
 import { fetchSummaryData, fetchPostDetails } from '../api/dataService';
 import maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
+import '../css/fosas.css'; // Import the new CSS file
+import isMobile from '../util/isMobile'; // Import the isMobile utility
 
 function Fosas() {
   const [fosas, setFosas] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedColectivo, setSelectedColectivo] = useState('');
+  const [isExpanded, setIsExpanded] = useState(false); // State to manage sidebar height
   const mapContainerRef = useRef(null);
   const mapRef = useRef(null); // Reference to the map instance
   const markersRef = useRef([]); // Reference to the markers
+  const isMobileDevice = isMobile(); // Check if the device is mobile
+
+  const toggleSidebarHeight = () => {
+    setIsExpanded((prevState) => !prevState); // Toggle the expanded state
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -33,8 +41,8 @@ function Fosas() {
       const map = new maplibregl.Map({
         container: mapContainerRef.current,
         style: 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json', // MapLibre style
-        center: [-104.434994, 19.614075], // Initial center (adjust as needed)
-        zoom: 6,
+        center: [-102.5528, 23.6345], // Center of Mexico
+        zoom: 5,
       });
 
       mapRef.current = map; // Store the map instance
@@ -74,7 +82,11 @@ function Fosas() {
     if (!mapRef.current) return;
 
     // Clear existing markers
-    markersRef.current.forEach(marker => marker.remove());
+    markersRef.current.forEach(({ marker }) => {
+      if (marker && typeof marker.remove === 'function') {
+        marker.remove();
+      }
+    });
     markersRef.current = [];
 
     // Add markers for filtered fosas
@@ -107,50 +119,40 @@ function Fosas() {
         essential: true, // This ensures the animation is always performed
       });
     }
+    if (isMobileDevice && isExpanded) {
+      setIsExpanded(false); // Reduce the sidebar panel
+      const sidebar = document.querySelector('.sidebar-container.mobile');
+      if (sidebar) {
+        sidebar.scrollTo({ top: 0, behavior: 'smooth' }); // Scroll to the top
+      }
+    }
   };
 
   return (
-    <div style={{ width: '100vw', height: '100vh', position: 'relative' }}>
+    <div className="fosas-container">
+      <div ref={mapContainerRef} className="map-container"></div>
       <div
-        ref={mapContainerRef}
-        style={{ width: '100%', height: '100%' }}
-      ></div>
-      <div
-        style={{
-          position: 'absolute',
-          top: 0,
-          right: 0,
-          width: '30%',
-          height: '100%',
-          overflowY: 'scroll',
-          backgroundColor: 'rgba(255, 255, 255, 0.9)',
-          padding: '10px',
-          boxShadow: '-2px 0 5px rgba(0, 0, 0, 0.1)',
-        }}
+        className={`sidebar-container ${isMobileDevice ? 'mobile' : ''} ${
+          isExpanded ? 'full-page' : ''
+        }`}
       >
-        <div style={{ marginBottom: '10px' }}>
+        {isMobileDevice && (
+          <button className="toggle-sidebar-button" onClick={toggleSidebarHeight}>
+            {isExpanded ? 'Reducir' : 'Expandir'}
+          </button>
+        )}
+        <div>
           <input
             type="text"
             placeholder="Buscar por zonas, descripción o colectivo"
             value={searchTerm}
             onChange={handleSearchChange}
-            style={{
-              width: '100%',
-              padding: '8px',
-              marginBottom: '10px',
-              border: '1px solid #ccc',
-              borderRadius: '4px',
-            }}
+            className="search-input"
           />
           <select
             value={selectedColectivo}
             onChange={handleColectivoChange}
-            style={{
-              width: '100%',
-              padding: '8px',
-              border: '1px solid #ccc',
-              borderRadius: '4px',
-            }}
+            className="select-dropdown"
           >
             <option value="">Todos los colectivos</option>
             {uniqueColectivos.map((colectivo) => (
@@ -160,11 +162,11 @@ function Fosas() {
             ))}
           </select>
         </div>
-        <ul>
+        <ul className="fosas-list">
           {filteredFosas.map((fosa) => (
-            <li key={fosa.id} style={{ marginBottom: '20px' }}>
+            <li key={`${fosa.host}-${fosa.type}-${fosa.id}`} className="fosas-list-item">
               <h2
-                style={{ cursor: 'pointer', color: 'blue' }}
+                className="fosas-title"
                 onClick={() =>
                   handleTitleClick(
                     parseFloat(fosa.meta?.latitud?.[0]),
@@ -178,7 +180,7 @@ function Fosas() {
               <img
                 src={fosa.media_url || fosa.image}
                 alt={fosa.title}
-                style={{ maxWidth: '100%', height: 'auto', marginBottom: '10px' }}
+                className="fosas-image"
               />
               <p><strong>Fecha:</strong> {new Date(fosa.date).toLocaleDateString()}</p>
               <p><strong>Slug:</strong> {fosa.slug}</p>
@@ -189,6 +191,13 @@ function Fosas() {
                 href={`https://${fosa.host}/?p=${fosa.id}`}
                 target="_blank"
                 rel="noopener noreferrer"
+                className="fosas-link"
+                onClick={() =>
+                  handleTitleClick(
+                    parseFloat(fosa.meta?.latitud?.[0]),
+                    parseFloat(fosa.meta?.longitud?.[0])
+                  )
+                }
               >
                 Ver post original
               </a>

@@ -10,6 +10,7 @@ function Indicios() {
     marca: '',
     talla: '',
     material: '',
+    host: '',
   });
 
   useEffect(() => {
@@ -37,19 +38,31 @@ function Indicios() {
     }));
   };
 
+  const resetFilters = () => {
+    setFilters({
+      tipo_prenda: '',
+      color: '',
+      marca: '',
+      talla: '',
+      material: '',
+      host: '',
+    });
+  };
+
   const filteredIndicios = indicios.filter((indicio) => {
-    return Object.keys(filters).every((taxonomy) => {
-      if (!filters[taxonomy]) return true; // If no filter is applied, include all
+    // Check if the "host" filter is applied and matches
+    const matchesHost = filters.host ? indicio.host === filters.host : true;
+
+    // Check if all other filters match
+    const matchesOtherFilters = Object.keys(filters).every((taxonomy) => {
+      if (taxonomy === 'host' || !filters[taxonomy]) return true; // Skip "host" or empty filters
       return indicio.taxonomies.some(
         (tax) => tax.taxonomy === taxonomy && tax.slug === filters[taxonomy]
       );
-    }) && (
-      indicio.title.toLowerCase().includes(filters.tipo_prenda) || // Match by title (nombre)
-      indicio.host.toLowerCase().includes(filters.tipo_prenda) || // Match by colectivo autor
-      indicio.slug.toLowerCase().includes(filters.tipo_prenda) || // Match by slug
-      indicio.taxonomies?.some(tax => tax.name.toLowerCase().includes(filters.tipo_prenda)) || // Match by zona
-      indicio.meta?.descripcion?.[0]?.toLowerCase().includes(filters.tipo_prenda) // Match by descripción
-    );
+    });
+
+    // Combine all filter conditions
+    return matchesHost && matchesOtherFilters;
   });
 
   const getUniqueTaxonomyValues = (taxonomy) => {
@@ -66,11 +79,32 @@ function Indicios() {
     return values;
   };
 
+  const getUniqueHosts = () => {
+    return [...new Set(indicios.map((indicio) => indicio.host))];
+  };
+
   return (
     <div className="content-wide">
+      <h1>Indicios</h1>
       <div id="filter-controls">
+        <div>
+          <label htmlFor="host-filter">COLECTIVO AUTOR:</label>
+          <select
+            id="host-filter"
+            className="taxonomy-filter"
+            value={filters.host || ''}
+            onChange={(e) => handleFilterChange('host', e.target.value)}
+          >
+            <option value="">Todos</option>
+            {getUniqueHosts().map((host) => (
+              <option key={host} value={host}>
+                {host}
+              </option>
+            ))}
+          </select>
+        </div>
         {['tipo_prenda', 'color', 'marca', 'talla', 'material'].map((taxonomy) => (
-          <div key={taxonomy} style={{ marginRight: '10px', display: 'inline-block' }}>
+          <div key={taxonomy}>
             <label htmlFor={`${taxonomy}-filter`}>
               {taxonomy.replace('_', ' ').toUpperCase()}:
             </label>
@@ -89,12 +123,15 @@ function Indicios() {
             </select>
           </div>
         ))}
+        <button className="reset-filters-button" onClick={resetFilters}>
+          Borrar Filtros
+        </button>
       </div>
 
       <div id="indicio-gallery" className="grid">
         {filteredIndicios.map((indicio) => (
           <div
-            key={indicio.id}
+            key={`${indicio.host}-${indicio.type}-${indicio.id}`}
             className="indicio-item"
             {...Object.fromEntries(
               indicio.taxonomies.map((tax) => [`data-${tax.taxonomy}`, tax.slug])
@@ -110,7 +147,7 @@ function Indicios() {
             <h3>
               <a href={`https://${indicio.host}/?p=${indicio.id}`}>{indicio.title}</a>
             </h3>
-            <p className="quiet">Posted by {indicio.host}</p>
+            <p className="quiet">Colectivo autor: {indicio.host}</p>
             <p className="taxonomies">
               {indicio.taxonomies.map((tax) => (
                 <span key={tax.slug}>
@@ -120,6 +157,14 @@ function Indicios() {
                 </span>
               ))}
             </p>
+            <a
+              href={`https://${indicio.host}/?p=${indicio.id}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="indicio-link"
+            >
+              Ver indicio en sitio original
+            </a>
           </div>
         ))}
       </div>

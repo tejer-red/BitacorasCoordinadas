@@ -27,10 +27,10 @@ function Bitacoras() {
 
   return (
     <div>
-      <h1>Bitácoras</h1>
+      <h1>Diarios de Campo</h1>
       <ul>
         {bitacoras.map((bitacora) => (
-          <li key={bitacora.id}>
+          <li key={`${bitacora.host}-${bitacora.type}-${bitacora.id}`}>
             <h2>{bitacora.title}</h2>
             <p><strong>Colectivo autor:</strong> {bitacora.host}</p>
             <img
