@@ -3,7 +3,7 @@ import React from 'react';
 function Introduccion() {
   return (
     <div>
-      <h1>Coordinadas</h1>
+      <img src="/logotipoHorizontal.png" alt="Logo de Bitácoras Coordinadas" className="logo-intro" />
       <p>
         <strong>Bitácoras Coordinadas</strong> es una plataforma colaborativa que conecta las distintas instancias de la{' '}
         <a href="https://bitacorabusqueda.tejer.red/">Bitácora de Búsqueda</a>, una herramienta digital creada por y para colectivos de búsqueda de personas desaparecidas en México.
@@ -22,10 +22,6 @@ function Introduccion() {
         <li>Visibilizar los hallazgos colectivos mediante mapas interactivos, listados y filtros por fecha, región o tipo de objeto.</li>
         <li>Construir, desde abajo, un censo alternativo, participativo y autogestionado de fosas e indicios.</li>
       </ul>
-      <h2>¿Cómo funciona?</h2>
-      <p>
-        La plataforma utiliza la <strong>API REST</strong> de cada Bitácora de Búsqueda para acceder únicamente a los datos que cada colectivo decide compartir. No se centraliza ni se migra la base completa, respetando así la soberanía técnica de cada instancia.
-      </p>
       <h2>Explora los registros</h2>
       <ul>
         <li>👉 <a href="/diarios">Diarios de Campo</a></li>

@@ -1,0 +1,52 @@
+// Use Vanilla Framework
+@use 'vanilla-framework' as vf;
+
+// Include the entire framework
+@include vf.vanilla;
+
+// Optionally override some settings
+$color-brand: #ffffff;
+
+/* Fija el aside a la izquierda */
+.u-fixed-sidebar {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+    background-color: var(--color-x-light); // estilo Vanilla
+    border-right: 1px solid var(--color-muted);
+    z-index: 10;
+  }
+  
+  /* Empuja el contenido a la derecha del sidebar */
+  .u-has-sidebar {
+
+  }
+  
+  
+  @media (max-width: 768px) {
+    .u-fixed-sidebar {
+      display: none;
+    }
+    .u-has-sidebar {
+      margin-left: 0;
+    }
+  }
+
+  #root {
+    width: 100%;
+}
+.app-container {
+    min-width: 100dvw;
+    padding: 0;
+    margin: 0;
+}
+
+.fosas-container .p-card--highlighted{
+    margin-bottom: 0;
+}
+
+
+.diarios .row {
+    min-width:99%;
+  }

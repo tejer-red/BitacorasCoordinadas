@@ -1,16 +1,31 @@
 import React, { useEffect, useState } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate, useLocation, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation, Link, useNavigate } from 'react-router-dom';
+import { Button, SideNavigation, SideNavigationItem, Badge } from '@canonical/react-components';
 import Bitacoras from './pages/Bitacoras';
 import Fosas from './pages/Fosas';
 import Indicios from './pages/Indicios';
 import Introduccion from './pages/Introduccion';
 import isMobile from './util/isMobile'; // Import the utility function
 import "./css/App.css";
+import "./css/style.css";
+
 
 function App() {
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false); // State to manage menu visibility
   const [isMobileDevice, setIsMobileDevice] = useState(false);
+
+  const sideMenuItems = [
+    {
+      className: 'menu-principal',
+      items: [
+        { href: '/informacion', label: 'Información' },
+        { href: '/diarios', label: 'Diarios de Campo' },
+        { href: '/fosas', label: 'Fosas' },
+        { href: '/indicios', label: 'Indicios' }
+      ]
+    }
+  ];
 
   useEffect(() => {
     setIsMobileDevice(isMobile());
@@ -20,7 +35,6 @@ function App() {
     setIsMenuOpen(!isMenuOpen);
   };
 
-  // Determine the className based on the current route
   const getPageClassName = () => {
     switch (location.pathname) {
       case '/informacion':
@@ -36,91 +50,127 @@ function App() {
     }
   };
 
+  function CoordinadaSideNavigation() {
+    const navigate = useNavigate();
+    const location = useLocation();
+  
+    // Maneja clics para evitar recarga y usar navegación SPA
+    const handleClick = (e, href) => {
+      e.preventDefault();
+      if (location.pathname !== href) {
+        navigate(href);
+      }
+    };
+  
+    // Reescribimos items con onClick
+    const processedItems = sideMenuItems.map(section => ({
+      ...section,
+      items: section.items.map(item => ({
+        ...item,
+        onClick: (e) => handleClick(e, item.href),
+        href: item.href // evita navegación por defecto
+      }))
+    }));
+  
+    return (
+      <SideNavigation items={processedItems} />
+    );
+  }
+
   return (
-    <div className={`app-container ${getPageClassName()} ${isMobileDevice ? 'mobile' : 'desktop'}`}>
+    <div className={`app-container row ${getPageClassName()} ${isMobileDevice ? 'mobile' : 'desktop'}`}>
       {/* Sidebar Section */}
       {isMobileDevice ? (
         <>
           <div className="mobile-header">
             <Link to="/" className="mobile-logo">
               <img
-                src="https://tejer.red/logo.png"
+                src="/logotipoCuadrado.png"
                 alt="Bitácoras Coordinadas Logo"
                 className="mobile-logo-image"
               />
             </Link>
-            <button className="hamburger-button" onClick={toggleMenu}>
+            <Button appearance="base" onClick={toggleMenu}>
               ☰
-            </button>
+            </Button>
           </div>
           {isMenuOpen && (
             <div className="mobile-menu">
               <div className="mobile-menu-header">
-                <button className="close-button" onClick={toggleMenu}>
+                <Button appearance="negative" onClick={toggleMenu}>
                   ✖
-                </button>
+                </Button>
               </div>
-              <div className="mobile-menu-buttons">
-                <Link to="/informacion" className="sidebar-button" onClick={toggleMenu}>
-                  Información
-                </Link>
-                <Link to="/diarios" className="sidebar-button" onClick={toggleMenu}>
-                  Diarios de Campo
-                </Link>
-                <Link to="/fosas" className="sidebar-button" onClick={toggleMenu}>
-                  Fosas
-                </Link>
-                <Link to="/indicios" className="sidebar-button" onClick={toggleMenu}>
-                  Indicios
-                </Link>
-              </div>
-              <p className="sidebar-footer">
-                <strong>Coordinadas</strong> es una iniciativa de{' '}
-                <a href="https://tejer.red">tejer.red</a> que articula herramientas 
-                digitales construidas junto a colectivos de búsqueda para registrar, 
-                compartir y visibilizar hallazgos de forma autónoma, segura y 
-                descentralizada.
-              </p>
+              <SideNavigation>
+                <SideNavigationItem>
+                  <Button element={Link} to="/informacion" onClick={toggleMenu}>
+                    Información
+                  </Button>
+                </SideNavigationItem>
+                <SideNavigationItem>
+                  <Button element={Link} to="/diarios" onClick={toggleMenu}>
+                    Diarios de Campo
+                  </Button>
+                </SideNavigationItem>
+                <SideNavigationItem>
+                  <Button element={Link} to="/fosas" onClick={toggleMenu}>
+                    Fosas
+                  </Button>
+                </SideNavigationItem>
+                <SideNavigationItem>
+                  <Button element={Link} to="/indicios" onClick={toggleMenu}>
+                    Indicios
+                  </Button>
+                </SideNavigationItem>
+              </SideNavigation>
+              <footer className="p-card--highlighted u-no-padding">
+                <p className="p-heading--5 u-padding">
+                  <strong>Coordinadas</strong> es una iniciativa de{' '}
+                  <a href="https://tejer.red">tejer.red</a> que articula herramientas 
+                  digitales construidas junto a colectivos de búsqueda para registrar, 
+                  compartir y visibilizar hallazgos de forma autónoma, segura y 
+                  descentralizada.
+                </p>
+              </footer>
             </div>
           )}
         </>
       ) : (
-        <div className="sidebar">
+        <aside className="col-2 p-side-navigation u-fixed-sidebar">
           <div className="sidebar-header">
             <Link to="/">
+              <img
+                src="/logotipoCuadrado.png"
+                alt="Bitácoras Coordinadas Logo"
+                className="sidebar-logo u-margin-top"
+              />
+            </Link>
+          </div>
+
+    
+          <CoordinadaSideNavigation />
+
+          <footer className="p-card--highlighted u-padding">
+            <p className="p-heading--5 u-padding">
+              <strong>Bitácoras Coordinadas</strong> es una iniciativa de{' '}
+              <a href="https://tejer.red">tejer.red</a> que articula herramientas 
+              digitales construidas junto a colectivos de búsqueda para registrar, 
+              compartir y visibilizar hallazgos de forma autónoma, segura y 
+              descentralizada.
+            </p>
+            <p style={{ textAlign: 'center' }}>
               <img
                 src="https://tejer.red/logo.png"
                 alt="Bitácoras Coordinadas Logo"
                 className="sidebar-logo"
               />
-            </Link>
-          </div>
-          <div className="sidebar-buttons">
-            <Link to="/informacion" className="sidebar-button">
-              Información
-            </Link>
-            <Link to="/diarios" className="sidebar-button">
-              Diarios de Campo
-            </Link>
-            <Link to="/fosas" className="sidebar-button">
-              Fosas
-            </Link>
-            <Link to="/indicios" className="sidebar-button">
-              Indicios
-            </Link>
-          </div>
-          <p className="sidebar-footer">
-            <strong>Coordinadas</strong> es una iniciativa de{' '}
-            <a href="https://tejer.red">tejer.red</a> que articula herramientas 
-            digitales construidas junto a colectivos de búsqueda para registrar, 
-            compartir y visibilizar hallazgos de forma autónoma, segura y 
-            descentralizada.
-          </p>
-        </div>
+            </p>
+          </footer>
+        </aside>
       )}
 
       {/* Main Content Section */}
-      <div className="content">
+      <main className="col-10 u-padding u-has-sidebar">
         <Routes>
           <Route path="/informacion" element={<Introduccion />} />
           <Route path="/diarios" element={<Bitacoras />} />
@@ -128,7 +178,7 @@ function App() {
           <Route path="/indicios" element={<Indicios />} />
           <Route path="*" element={<Navigate to="/informacion" />} />
         </Routes>
-      </div>
+      </main>
     </div>
   );
 }

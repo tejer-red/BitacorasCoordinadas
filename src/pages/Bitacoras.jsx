@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { fetchSummaryData, fetchPostDetails } from '../api/dataService';
+import { Spinner, Row } from '@canonical/react-components';
+import BitacoraGridItem from '../components/BitacoraGridItem';
 
 function Bitacoras() {
   const [bitacoras, setBitacoras] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -20,54 +23,30 @@ function Bitacoras() {
       );
 
       setBitacoras(details.filter(item => item !== null));
+      setLoading(false);
     };
 
     fetchData();
   }, []);
 
+  if (loading) {
+    return (
+      <div style={{ textAlign: 'center', marginTop: '50px' }}>
+        <Spinner text="Cargando diarios de campo..." />
+      </div>
+    );
+  }
+
+  console.log('Bitácoras:', bitacoras); // Log the array of bitácoras
+
   return (
     <div>
       <h1>Diarios de Campo</h1>
-      <ul>
+      <Row>
         {bitacoras.map((bitacora) => (
-          <li key={`${bitacora.host}-${bitacora.type}-${bitacora.id}`}>
-            <h2>{bitacora.title}</h2>
-            <p><strong>Colectivo autor:</strong> {bitacora.host}</p>
-            <img
-              src={bitacora.media_url || bitacora.image}
-              alt={bitacora.title}
-              style={{ maxWidth: '300px', width: '100%' }}
-            />
-            <p><strong>Fecha:</strong> {new Date(bitacora.date).toLocaleDateString()}</p>
-            <p><strong>Slug:</strong> {bitacora.slug}</p>
-            <p><strong>Latitud:</strong> {bitacora.meta?.latitud?.[0]}</p>
-            <p><strong>Longitud:</strong> {bitacora.meta?.longitud?.[0]}</p>
-            <p><strong>Zona:</strong> {bitacora.taxonomies?.map(tax => tax.name).join(', ')}</p>
-            {bitacora.meta?.gallery_urls?.length > 0 && (
-              <div>
-                <strong>Galería:</strong>
-                <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-                  {bitacora.meta.gallery_urls.map((url, index) => (
-                    <img
-                      key={index}
-                      src={url}
-                      alt={`Galería ${index + 1}`}
-                      style={{ maxWidth: '100px', height: 'auto' }}
-                    />
-                  ))}
-                </div>
-              </div>
-            )}
-            <a
-              href={`https://${bitacora.host}/?p=${bitacora.id}`}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Ver post original
-            </a>
-          </li>
+          <BitacoraGridItem key={`${bitacora.host}-${bitacora.type}-${bitacora.id}`} bitacora={bitacora} />
         ))}
-      </ul>
+      </Row>
     </div>
   );
 }

@@ -7,9 +7,12 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "build-css": "sass --quiet-deps --load-path=node_modules src/css:src/css --style=compressed",
+    "watch-css": "npm run build-css && sass --quiet-deps --load-path=node_modules -w src/css:src/css --style=compressed"
   },
   "dependencies": {
+    "@canonical/react-components": "^2.5.1",
     "@mui/material": "^5.15.15",
     "antd": "^5.25.1",
     "axios": "^1.6.7",
@@ -18,7 +21,9 @@
     "react-dom": "^18.2.0",
     "react-query": "^3.39.3",
     "react-router-dom": "^6.21.1",
-    "react-window": "^1.8.9"
+    "react-window": "^1.8.9",
+    "sass": "^1.89.0",
+    "vanilla-framework": "^4.24.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.25.0",

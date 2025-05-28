@@ -1,5 +1,4 @@
 .fosas-container {
-  width: 100vw;
   height: 100vh;
   position: relative;
 }
@@ -10,15 +9,14 @@
 }
 
 .fosas-container .sidebar-container {
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 295px;
-    height: calc(100% - 20px);
-    overflow-y: scroll;
-    background-color: rgba(255, 255, 255, 0.9);
-    padding: 10px;
-    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  width: 325px;
+  height: calc(90% - 20px);
+  overflow-y: overlay;
+  background-color: rgba(255, 255, 255, 0.9);
+  padding: 10px;
 }
 
 .fosas-container .sidebar-container.mobile {
