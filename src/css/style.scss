@@ -16,37 +16,108 @@ $color-brand: #ffffff;
     background-color: var(--color-x-light); // estilo Vanilla
     border-right: 1px solid var(--color-muted);
     z-index: 10;
-  }
-  
-  /* Empuja el contenido a la derecha del sidebar */
-  .u-has-sidebar {
+}
 
-  }
-  
-  
-  @media (max-width: 768px) {
+.app-container.mobile .u-fixed-sidebar {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+    background-color: var(--color-x-light); // estilo Vanilla
+    border-right: 1px solid var(--color-muted);
+    z-index: 10;
+}
+
+/* Empuja el contenido a la derecha del sidebar */
+.u-has-sidebar {
+
+}
+
+.app-container.mobile .u-has-sidebar {
+
+}
+
+.app-container.mobile .p-header {
+    display: grid;
+    grid-template-columns: 80% 20%;
+    margin-top: 10px;
+}
+
+.app-container.mobile .p-header__logo {
+    text-align: center;
+}
+
+.app-container.mobile .p-header__logo-image {
+    width: 50%;
+}
+
+.app-container.mobile .p-header__navigation {
+    text-align: center;
+}
+
+.app-container.mobile .u-hide--medium {
+    font-size: 2rem;
+    line-height: 1;
+    padding: 0.5rem 1rem;
+    margin: 0;
+}
+
+.app-container.mobile .SideNavigation {
+    width: 100dvw;
+}
+
+@media (max-width: 768px) {
     .u-fixed-sidebar {
-      display: none;
+        display: none;
     }
     .u-has-sidebar {
-      margin-left: 0;
+        margin-left: 0;
     }
-  }
 
-  #root {
+    .app-container.mobile .u-fixed-sidebar {
+        display: none;
+    }
+    .app-container.mobile .u-has-sidebar {
+        margin-left: 0;
+    }
+}
+
+#root {
     width: 100%;
 }
+
+.app-container.mobile #root {
+    width: 100%;
+}
+
 .app-container {
     min-width: 100dvw;
     padding: 0;
     margin: 0;
 }
 
-.fosas-container .p-card--highlighted{
+.app-container.mobile .app-container {
+    min-width: 100dvw;
+    padding: 0;
+    margin: 0;
+}
+
+.fosas-container .p-card--highlighted {
     margin-bottom: 0;
 }
 
+.app-container.mobile .fosas-container .p-card--highlighted {
+    margin-bottom: 0;
+}
 
 .diarios .row {
-    min-width:99%;
-  }
+    min-width: 99%;
+}
+
+.app-container.mobile .diarios .row {
+    min-width: 99%;
+}
+
+.app-container.mobile .p-header__navigation_mobile {
+  width: 100dvw;
+}

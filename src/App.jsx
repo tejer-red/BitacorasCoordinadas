@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation, Link, useNavigate } from 'react-router-dom';
-import { Button } from '@canonical/react-components';
 import Bitacoras from './pages/Bitacoras';
 import Fosas from './pages/Fosas';
 import Indicios from './pages/Indicios';
@@ -11,18 +10,6 @@ import MenuMobile from './components/Menu/MenuMobile';
 import "./css/App.css";
 import "./css/style.css";
 
-const sideMenuItems = [
-  {
-    className: 'menu-principal',
-    items: [
-      { href: '/informacion', label: 'Información' },
-      { href: '/diarios', label: 'Diarios de Campo' },
-      { href: '/fosas', label: 'Fosas' },
-      { href: '/indicios', label: 'Indicios' }
-    ]
-  }
-];
-
 function App() {
   const location = useLocation();
   const navigate = useNavigate();
@@ -32,6 +19,18 @@ function App() {
     setIsMobileDevice(isMobile());
   }, []);
 
+  const sideMenuItems = [
+    {
+      className: 'menu-principal',
+      items: [
+        { href: '/informacion', label: 'Información' },
+        { href: '/diarios', label: 'Diarios de Campo' },
+        { href: '/fosas', label: 'Fosas' },
+        { href: '/indicios', label: 'Indicios' }
+      ]
+    }
+  ];
+  
   const getPageClassName = () => {
     switch (location.pathname) {
       case '/informacion':

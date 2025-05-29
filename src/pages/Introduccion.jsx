@@ -1,9 +1,18 @@
 import React from 'react';
+import isMobile from '../util/isMobile';
+
 
 function Introduccion() {
   return (
-    <div>
-      <img src="/logotipoHorizontal.png" alt="Logo de Bitácoras Coordinadas" className="logo-intro" />
+    <div style={{ padding: isMobile() ? '1rem' : '',}}>
+      <p style={{ textAlign: isMobile() ? 'center' : 'left' }}>
+      <img 
+        src={isMobile() ? "/logotipoCuadrado.png" : "/logotipoHorizontal.png"} 
+        style={{ width: isMobile() ? '30%' : '500px' }}
+        alt="Logo de Bitácoras Coordinadas" 
+        className="logo-intro" 
+      />
+      </p>
       <p>
         <strong>Bitácoras Coordinadas</strong> es una plataforma colaborativa que conecta las distintas instancias de la{' '}
         <a href="https://bitacorabusqueda.tejer.red/">Bitácora de Búsqueda</a>, una herramienta digital creada por y para colectivos de búsqueda de personas desaparecidas en México.

@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Button, SideNavigation } from '@canonical/react-components';
+import { PrimaryNav, Button, SideNavigation } from '@canonical/react-components';
 
 function MenuMobile({ sideMenuItems, onNavigate }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -17,44 +16,39 @@ function MenuMobile({ sideMenuItems, onNavigate }) {
         toggleMenu();
         onNavigate(e, item.href);
       },
-      href: item.href // Prevent default navigation
+      href: item.href
     }))
   }));
 
   return (
-    <>
-      <div className="mobile-header">
-        <Link to="/" className="mobile-logo">
+    <header className="p-header ">
+      <div className="p-header__logo ">
+        <a href="/">
           <img
-            src="/logotipoCuadrado.png"
+            src="/logotipoHorizontal.png"
             alt="Bitácoras Coordinadas Logo"
-            className="mobile-logo-image"
+            className="p-header__logo-image "
           />
-        </Link>
-        <Button appearance="base" onClick={toggleMenu}>
+        </a>
+      </div>
+      <div className="p-header__navigation ">
+        <Button
+          appearance="base"
+          onClick={toggleMenu}
+          aria-label="Toggle navigation"
+          className="u-hide--medium "
+        >
           ☰
         </Button>
       </div>
       {isMenuOpen && (
-        <div className="mobile-menu">
-          <div className="mobile-menu-header">
-            <Button appearance="negative" onClick={toggleMenu}>
-              ✖
-            </Button>
-          </div>
-          <SideNavigation items={processedItems} />
-          <footer className="p-card--highlighted u-no-padding">
-            <p className="p-heading--5 u-padding">
-              <strong>Coordinadas</strong> es una iniciativa de{' '}
-              <a href="https://tejer.red">tejer.red</a> que articula herramientas 
-              digitales construidas junto a colectivos de búsqueda para registrar, 
-              compartir y visibilizar hallazgos de forma autónoma, segura y 
-              descentralizada.
-            </p>
-          </footer>
-        </div>
+        <SideNavigation
+          className="p-header__navigation_mobile"
+          items={processedItems}
+          aria-label="Mobile navigation"
+        />
       )}
-    </>
+    </header>
   );
 }
 
