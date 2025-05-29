@@ -42,11 +42,33 @@ function MenuMobile({ sideMenuItems, onNavigate }) {
         </Button>
       </div>
       {isMenuOpen && (
+        <div style={{
+          background: "#d8d8d83b",
+          width: "100dvw"
+      }}>
         <SideNavigation
           className="p-header__navigation_mobile"
           items={processedItems}
           aria-label="Mobile navigation"
         />
+        <footer className="u-padding">
+        <p className=" p-card--highlighted p-heading--5 u-padding">
+          <strong>Bitácoras Coordinadas</strong> es una iniciativa de{' '}
+          <a href="https://tejer.red">tejer.red</a> que articula herramientas 
+          digitales construidas junto a colectivos de búsqueda para registrar, 
+          compartir y visibilizar hallazgos de forma autónoma, segura y 
+          descentralizada.
+        </p>
+        <p style={{ textAlign: 'center' }}>
+          <img
+            src="https://tejer.red/logo.png"
+            alt="Bitácoras Coordinadas Logo"
+            className="sidebar-logo"
+          />
+        </p>
+      </footer>
+      </div>
+        
       )}
     </header>
   );
