@@ -1,6 +1,7 @@
 .fosas-container {
-  height: 100vh;
+  height: calc(100dvh - 4rem);
   position: relative;
+  overflow: hidden;
 }
 
 .fosas-container .map-container {
@@ -91,20 +92,27 @@
 }
 
 .fosas.mobile .fosas-container .sidebar-container {
-    position: absolute;
-    top: auto;
-    bottom: 0;
-    right: 0;
-    left: 0;
-    width: calc(100% - 2rem);
-    overflow-y: scroll;
-    background-color: rgba(255, 255, 255, 0.9);
-    padding: 1rem;
-    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+  position: absolute;
+  top: auto;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  width: calc(100% - 0rem);
+  overflow-y: scroll;
+  background-color: rgba(255, 255, 255, 0.9);
+  padding: 1rem;
+  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+  margin-bottom: 0;
+  overflow: hidden;
+  height: 10%;
+}
+
+.fosas.mobile .fosas-container .sidebar-container.sidebar-container.mobile.full-page {
+  height: 80%;
+  overflow: overlay;
 }
 
 .fosas.mobile .fosas-container .search-input {
-  width: calc(100% - 20px);
   margin-bottom: 10px;
 }
 

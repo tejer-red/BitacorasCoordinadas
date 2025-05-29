@@ -121,3 +121,11 @@ $color-brand: #ffffff;
 .app-container.mobile .p-header__navigation_mobile {
   width: 100dvw;
 }
+
+.app-container.mobile .u-padding.u-has-sidebar {
+    padding: 2rem;
+}
+
+.app-container.mobile.fosas .u-padding.u-has-sidebar {
+    padding: 0rem;
+}

@@ -46,11 +46,20 @@ function FosasSidebar({
     >
       {isMobileDevice && (
         <Button
-          appearance="base"
-          className="toggle-sidebar-button"
+          className={`toggle-sidebar-button ${isExpanded ? 'p-button--negative has-icon' : 'p-button--positive has-icon'}`}
           onClick={toggleSidebarHeight}
         >
-          {isExpanded ? 'Reducir' : 'Expandir'}
+          {isExpanded ? (
+            <>
+              <i className="p-icon--chevron-down is-light"></i>
+              <span>Reducir</span>
+            </>
+          ) : (
+            <>
+              <i className="p-icon--chevron-up is-light"></i>
+              <span>Expandir</span>
+            </>
+          )}
         </Button>
       )}
       <div className="p-card__inner">

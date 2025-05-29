@@ -120,9 +120,6 @@ margin-right: 0px;
   background-color: #d9363e;
 }
 
-.mobile .content-wide {
-  width: calc(100dvw - 30px);
-}
 
 /*after vainilla framework installed*/
 
