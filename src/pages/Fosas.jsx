@@ -5,6 +5,7 @@ import isMobile from '../util/isMobile';
 import FosasSidebar from '../components/FosasSidebar';
 import FosasMap from '../components/FosasMap';
 import { Spinner } from '@canonical/react-components'; // Import Spinner
+import { contarIndiciosPorFosa } from '../utils/relacionFosaIndicios';
 
 function Fosas() {
   const [allFosas, setAllFosas] = useState([]); // Cambia fosas -> allFosas
@@ -12,6 +13,7 @@ function Fosas() {
   const [selectedColectivo, setSelectedColectivo] = useState('');
   const [isExpanded, setIsExpanded] = useState(false);
   const [loading, setLoading] = useState(true); // State to track loading
+  const [allIndicios, setAllIndicios] = useState([]); // Nuevo estado para indicios
   const isMobileDevice = isMobile();
   const mapRef = useRef(null); // Reference to the map instance
 
@@ -41,17 +43,27 @@ function Fosas() {
       try {
         setLoading(true); // Start loading
         const summary = await fetchSummaryData();
-        const filtered = summary.filter(item => item.type === 'fosas');
+        const filteredFosas = summary.filter(item => item.type === 'fosas');
+        const filteredIndicios = summary.filter(item => item.type === 'indicios');
 
-        const details = await Promise.all(
-          filtered.map(async (item) => {
+        const detailsFosas = await Promise.all(
+          filteredFosas.map(async (item) => {
+            const detail = await fetchPostDetails(item.host, item.type, item.id);
+            return detail ? { ...detail, host: item.host, type: item.type, id: item.id } : null;
+          })
+        );
+        const detailsIndicios = await Promise.all(
+          filteredIndicios.map(async (item) => {
             const detail = await fetchPostDetails(item.host, item.type, item.id);
             return detail ? { ...detail, host: item.host, type: item.type, id: item.id } : null;
           })
         );
 
-        const validFosas = details.filter(item => item !== null);
+        const validFosas = detailsFosas.filter(item => item !== null);
+        const validIndicios = detailsIndicios.filter(item => item !== null);
+
         setAllFosas(validFosas); // Guardar todas las fosas sin filtrar
+        setAllIndicios(validIndicios);
       } finally {
         setLoading(false); // Stop loading
       }
@@ -62,6 +74,7 @@ function Fosas() {
 
   // Ya no filtrar aquí por instancias visibles
   const fosas = allFosas;
+  const conteoIndiciosPorFosa = contarIndiciosPorFosa(allIndicios);
 
   if (loading) {
     return (
@@ -82,6 +95,7 @@ function Fosas() {
         isExpanded={isExpanded}
         setIsExpanded={setIsExpanded}
         mapRef={mapRef} // Pass the map reference
+        conteoIndiciosPorFosa={conteoIndiciosPorFosa} // Nuevo prop
       />
       <FosasSidebar
         fosas={fosas}

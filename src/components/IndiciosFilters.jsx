@@ -7,6 +7,7 @@ const IndiciosFilters = ({
   resetFilters,
   getUniqueTaxonomyValues,
   getUniqueHosts,
+  getUniqueFosas, // Nuevo prop
 }) => {
   const [isExpanded, setIsExpanded] = useState(true); // Default to expanded on desktop
   const isMobileDevice = isMobile();
@@ -59,6 +60,25 @@ const IndiciosFilters = ({
               {getUniqueHosts().map((host) => (
                 <option key={host} value={host}>
                   {host}
+                </option>
+              ))}
+            </select>
+          </div>
+          {/* Filtro por fosa */}
+          <div className="p-form__group">
+            <label className="p-form__label" htmlFor="fosa-filter">
+              FOSA RELACIONADA:
+            </label>
+            <select
+              id="fosa-filter"
+              className="p-form__control"
+              value={filters.fosa_relacionada || ''}
+              onChange={(e) => handleFilterChange('fosa_relacionada', e.target.value)}
+            >
+              <option value="">Todas</option>
+              {getUniqueFosas().map((fosa) => (
+                <option key={fosa.id} value={fosa.id}>
+                  {fosa.title}
                 </option>
               ))}
             </select>

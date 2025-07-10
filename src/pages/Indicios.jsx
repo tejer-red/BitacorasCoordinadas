@@ -4,6 +4,7 @@ import '../css/indicios.css'; // Import the CSS file
 import IndicioGridItem from '../components/IndicioGridItem';
 import IndiciosFilters from '../components/IndiciosFilters';
 import { Row, Col } from '@canonical/react-components';
+import { useLocation } from 'react-router-dom';
 
 function Indicios() {
   const [indicios, setIndicios] = useState([]);
@@ -14,7 +15,26 @@ function Indicios() {
     talla: '',
     material: '',
     host: '',
+    fosa_relacionada: '', // Nuevo filtro
   });
+
+  const location = useLocation();
+
+  // Leer parámetros de la URL y aplicarlos como filtros iniciales solo una vez
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const fosa_relacionada = params.get('fosa_relacionada') || '';
+    const host = params.get('host') || '';
+    if (fosa_relacionada || host) {
+      setFilters((prev) => ({
+        ...prev,
+        fosa_relacionada,
+        host,
+      }));
+    }
+    // Solo en el primer render con location.search
+    // eslint-disable-next-line
+  }, [location.search]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -55,23 +75,29 @@ function Indicios() {
       talla: '',
       material: '',
       host: '',
+      fosa_relacionada: '', // Nuevo filtro
     });
   };
 
   const filteredIndicios = indicios.filter((indicio) => {
+    // Filtro por fosa_relacionada
+    const matchesFosa = filters.fosa_relacionada
+      ? (indicio.meta?.fosa_relacionada || []).includes(filters.fosa_relacionada)
+      : true;
+
     // Check if the "host" filter is applied and matches
     const matchesHost = filters.host ? indicio.host === filters.host : true;
 
     // Check if all other filters match
     const matchesOtherFilters = Object.keys(filters).every((taxonomy) => {
-      if (taxonomy === 'host' || !filters[taxonomy]) return true; // Skip "host" or empty filters
+      if (taxonomy === 'host' || taxonomy === 'fosa_relacionada' || !filters[taxonomy]) return true;
       return indicio.taxonomies.some(
         (tax) => tax.taxonomy === taxonomy && tax.slug === filters[taxonomy]
       );
     });
 
     // Combine all filter conditions
-    return matchesHost && matchesOtherFilters;
+    return matchesFosa && matchesHost && matchesOtherFilters;
   });
 
   const getUniqueTaxonomyValues = (taxonomy) => {
@@ -92,6 +118,37 @@ function Indicios() {
     return [...new Set(indicios.map((indicio) => indicio.host))];
   };
 
+  // Obtener todas las fosas relacionadas con los indicios (únicas), filtrando por colectivo si aplica
+  const getUniqueFosas = () => {
+    const fosaMap = {};
+    indicios.forEach(indicio => {
+      // Si hay filtro de colectivo, solo considerar indicios de ese colectivo
+      if (filters.host && indicio.host !== filters.host) return;
+      const rels = indicio.meta?.fosa_relacionada || [];
+      rels.forEach(fosaId => {
+        let title = null;
+        if (indicio.fosa_title && typeof indicio.fosa_title === 'object' && indicio.fosa_title[fosaId]) {
+          title = indicio.fosa_title[fosaId];
+        }
+        if (!title && indicio.fosas && Array.isArray(indicio.fosas)) {
+          const fosaObj = indicio.fosas.find(f => String(f.id) === String(fosaId));
+          if (fosaObj) title = fosaObj.title;
+        }
+        if (!title && indicio.meta?.fosa_titulo && Array.isArray(indicio.meta.fosa_titulo)) {
+          const idx = (indicio.meta?.fosa_relacionada || []).findIndex(id => String(id) === String(fosaId));
+          if (idx !== -1 && indicio.meta.fosa_titulo[idx]) {
+            title = indicio.meta.fosa_titulo[idx];
+          }
+        }
+        if (!title) {
+          title = `Fosa ${fosaId}`;
+        }
+        fosaMap[fosaId] = title;
+      });
+    });
+    return Object.entries(fosaMap).map(([id, title]) => ({ id, title }));
+  };
+
   return (
     <div className="content-wide">
       <h1>Indicios</h1>
@@ -101,6 +158,7 @@ function Indicios() {
         resetFilters={resetFilters}
         getUniqueTaxonomyValues={getUniqueTaxonomyValues}
         getUniqueHosts={getUniqueHosts}
+        getUniqueFosas={getUniqueFosas} // Nuevo prop
       />
       <Row className="p-grid">
         {filteredIndicios.map((indicio) => (
