@@ -4,6 +4,7 @@ import Bitacoras from './pages/Bitacoras';
 import Fosas from './pages/Fosas';
 import Indicios from './pages/Indicios';
 import Introduccion from './pages/Introduccion';
+import Configuraciones from './pages/Configuraciones';
 import isMobile from './util/isMobile';
 import MenuDesktop from './components/Menu/MenuDesktop';
 import MenuMobile from './components/Menu/MenuMobile';
@@ -26,7 +27,8 @@ function App() {
         { href: '/informacion', label: 'Información' },
         { href: '/diarios', label: 'Diarios de Campo' },
         { href: '/fosas', label: 'Fosas' },
-        { href: '/indicios', label: 'Indicios' }
+        { href: '/indicios', label: 'Indicios' },
+        { href: '/configuraciones', label: 'Configuraciones' }, // <-- nuevo item
       ]
     }
   ];
@@ -69,6 +71,7 @@ function App() {
           <Route path="/diarios" element={<Bitacoras />} />
           <Route path="/fosas" element={<Fosas />} />
           <Route path="/indicios" element={<Indicios />} />
+          <Route path="/configuraciones" element={<Configuraciones />} />
           <Route path="*" element={<Navigate to="/informacion" />} />
         </Routes>
       </main>

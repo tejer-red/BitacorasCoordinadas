@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Button, Input, CustomSelect } from '@canonical/react-components';
 import FosasListItem from './FosasListItem';
 
@@ -13,7 +13,25 @@ function FosasSidebar({
   handleTitleClick,
   isMobileDevice,
 }) {
-  const uniqueColectivos = [...new Set(fosas.map(fosa => fosa.host))];
+  // Obtener instancias visibles desde localStorage en cada render
+  const visibles = JSON.parse(localStorage.getItem('VISIBLE_INSTANCIAS') || '[]');
+
+  // Primero filtrar los colectivos (instancias visibles)
+  const uniqueColectivosVisibles = [
+    ...new Set(
+      fosas
+        .map(fosa => fosa.host)
+        .filter(host => visibles.length === 0 || visibles.includes(host))
+    ),
+  ];
+
+  // Si el colectivo seleccionado ya no está visible, limpiar el filtro
+  useEffect(() => {
+    if (selectedColectivo && !uniqueColectivosVisibles.includes(selectedColectivo)) {
+      setSelectedColectivo('');
+    }
+    // eslint-disable-next-line
+  }, [visibles.join(','), selectedColectivo, setSelectedColectivo]);
 
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value.toLowerCase());
@@ -23,7 +41,12 @@ function FosasSidebar({
     setSelectedColectivo(value);
   };
 
-  const filteredFosas = fosas.filter((fosa) => {
+  // Luego filtrar la lista de fosas por colectivo visible y seleccionado
+  const fosasFiltradasPorColectivo = fosas.filter(
+    fosa => uniqueColectivosVisibles.includes(fosa.host)
+  );
+
+  const filteredFosas = fosasFiltradasPorColectivo.filter((fosa) => {
     const matchesSearchTerm =
       fosa.title.toLowerCase().includes(searchTerm) ||
       fosa.host.toLowerCase().includes(searchTerm) ||
@@ -75,7 +98,7 @@ function FosasSidebar({
           name="colectivoSelect"
           options={[
             { disabled: false, label: 'Todos los colectivos', text: 'Todos los colectivos', value: '' },
-            ...uniqueColectivos.map((colectivo) => ({
+            ...uniqueColectivosVisibles.map((colectivo) => ({
               disabled: false,
               label: colectivo,
               text: colectivo,
@@ -84,7 +107,7 @@ function FosasSidebar({
           ]}
           value={selectedColectivo}
           onChange={handleColectivoChange}
-          searchable="always" // Enable search functionality
+          searchable="always"
           initialPosition="left"
         />
       </div>

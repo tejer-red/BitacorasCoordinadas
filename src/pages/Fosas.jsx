@@ -7,7 +7,7 @@ import FosasMap from '../components/FosasMap';
 import { Spinner } from '@canonical/react-components'; // Import Spinner
 
 function Fosas() {
-  const [fosas, setFosas] = useState([]);
+  const [allFosas, setAllFosas] = useState([]); // Cambia fosas -> allFosas
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedColectivo, setSelectedColectivo] = useState('');
   const [isExpanded, setIsExpanded] = useState(false);
@@ -51,7 +51,7 @@ function Fosas() {
         );
 
         const validFosas = details.filter(item => item !== null);
-        setFosas(validFosas);
+        setAllFosas(validFosas); // Guardar todas las fosas sin filtrar
       } finally {
         setLoading(false); // Stop loading
       }
@@ -59,6 +59,9 @@ function Fosas() {
 
     fetchData();
   }, []);
+
+  // Ya no filtrar aquí por instancias visibles
+  const fosas = allFosas;
 
   if (loading) {
     return (
@@ -72,7 +75,7 @@ function Fosas() {
     <div className="fosas-container">
       <FosasMap
         fosas={fosas}
-        setFosas={setFosas}
+        setFosas={setAllFosas}
         searchTerm={searchTerm}
         selectedColectivo={selectedColectivo}
         isMobileDevice={isMobileDevice}

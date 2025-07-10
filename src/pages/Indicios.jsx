@@ -28,7 +28,13 @@ function Indicios() {
         })
       );
 
-      setIndicios(details.filter(item => item !== null));
+      // Filtrar por instancias visibles
+      const visibles = JSON.parse(localStorage.getItem('VISIBLE_INSTANCIAS') || '[]');
+      const indiciosFiltrados = visibles.length > 0
+        ? details.filter(item => item !== null && visibles.includes(item.host))
+        : details.filter(item => item !== null);
+
+      setIndicios(indiciosFiltrados);
     };
 
     fetchData();

@@ -21,5 +21,7 @@ Puedes encontrar más información sobre el tema de WordPress **Bitácora de Bú
 1. Clona este repositorio.
 2. Instala las dependencias utilizando `npm install`.
 3. Inicia el servidor de desarrollo con `npm run dev`.
+4. Exponer el host local en con `lt --port 5173 --subdomain coordinada`.
+
 
 ¡Explora y visualiza los datos de manera eficiente con Bitácoras Coordinadas!

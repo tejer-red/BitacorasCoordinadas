@@ -22,7 +22,13 @@ function Bitacoras() {
         })
       );
 
-      setBitacoras(details.filter(item => item !== null));
+      // Filtrar por instancias visibles
+      const visibles = JSON.parse(localStorage.getItem('VISIBLE_INSTANCIAS') || '[]');
+      const bitacorasFiltradas = visibles.length > 0
+        ? details.filter(item => item !== null && visibles.includes(item.host))
+        : details.filter(item => item !== null);
+
+      setBitacoras(bitacorasFiltradas);
       setLoading(false);
     };
 

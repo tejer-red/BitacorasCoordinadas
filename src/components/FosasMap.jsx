@@ -49,6 +49,14 @@ function FosasMap({
   useEffect(() => {
     if (!mapRef.current) return;
 
+    // Obtener instancias visibles desde localStorage
+    const visibles = JSON.parse(localStorage.getItem('VISIBLE_INSTANCIAS') || '[]');
+    // Filtrar fosas por instancias visibles
+    const fosasVisibles = visibles.length > 0
+      ? fosas.filter(fosa => visibles.includes(fosa.host))
+      : fosas;
+
+    // Limpiar marcadores anteriores
     markersRef.current.forEach(({ marker }) => {
       if (marker && typeof marker.remove === 'function') {
         marker.remove();
@@ -56,7 +64,7 @@ function FosasMap({
     });
     markersRef.current = [];
 
-    fosas
+    fosasVisibles
       .filter((fosa) => {
         const matchesSearchTerm =
           fosa.title.toLowerCase().includes(searchTerm) ||
