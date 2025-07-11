@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { fetchSummaryData, fetchPostDetails } from '../api/dataService';
+import { fetchSummaryData, fetchPostDetails, concurrentMap } from '../api/dataService';
 import '../css/indicios.css'; // Import the CSS file
 import IndicioGridItem from '../components/IndicioGridItem';
 import IndiciosFilters from '../components/IndiciosFilters';
@@ -41,11 +41,14 @@ function Indicios() {
       const summary = await fetchSummaryData();
       const filtered = summary.filter(item => item.type === 'indicios');
 
-      const details = await Promise.all(
-        filtered.map(async (item) => {
+      // Usa concurrentMap importado
+      const details = await concurrentMap(
+        filtered,
+        async (item) => {
           const detail = await fetchPostDetails(item.host, item.type, item.id);
           return detail ? { ...detail, host: item.host, type: item.type, id: item.id } : null;
-        })
+        },
+        5
       );
 
       // Filtrar por instancias visibles

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { fetchSummaryData, fetchPostDetails } from '../api/dataService';
+import { fetchSummaryData, fetchPostDetails, concurrentMap } from '../api/dataService';
 import { Spinner, Row } from '@canonical/react-components';
 import BitacoraGridItem from '../components/BitacoraGridItem';
 
@@ -12,14 +12,16 @@ function Bitacoras() {
       const summary = await fetchSummaryData();
       const filtered = summary.filter(item => item.type === 'bitacoras');
 
-      const details = await Promise.all(
-        filtered.map(async (item) => {
+      const details = await concurrentMap(
+        filtered,
+        async (item) => {
           const detail = await fetchPostDetails(item.host, item.type, item.id);
           if (detail) {
             console.log('Bitácora Object:', detail); // Log the full object
           }
           return detail ? { ...detail, host: item.host, type: item.type, id: item.id } : null;
-        })
+        },
+        5
       );
 
       // Filtrar por instancias visibles

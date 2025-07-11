@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { fetchSummaryData, fetchPostDetails } from '../api/dataService';
+import { fetchSummaryData, fetchPostDetails, concurrentMap } from '../api/dataService';
 import '../css/fosas.css';
 import isMobile from '../util/isMobile';
 import FosasSidebar from '../components/FosasSidebar';
@@ -46,17 +46,22 @@ function Fosas() {
         const filteredFosas = summary.filter(item => item.type === 'fosas');
         const filteredIndicios = summary.filter(item => item.type === 'indicios');
 
-        const detailsFosas = await Promise.all(
-          filteredFosas.map(async (item) => {
+        // Usa concurrentMap importado
+        const detailsFosas = await concurrentMap(
+          filteredFosas,
+          async (item) => {
             const detail = await fetchPostDetails(item.host, item.type, item.id);
             return detail ? { ...detail, host: item.host, type: item.type, id: item.id } : null;
-          })
+          },
+          5
         );
-        const detailsIndicios = await Promise.all(
-          filteredIndicios.map(async (item) => {
+        const detailsIndicios = await concurrentMap(
+          filteredIndicios,
+          async (item) => {
             const detail = await fetchPostDetails(item.host, item.type, item.id);
             return detail ? { ...detail, host: item.host, type: item.type, id: item.id } : null;
-          })
+          },
+          5
         );
 
         const validFosas = detailsFosas.filter(item => item !== null);
