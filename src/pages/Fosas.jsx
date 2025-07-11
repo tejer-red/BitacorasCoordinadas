@@ -4,7 +4,7 @@ import '../css/fosas.css';
 import isMobile from '../util/isMobile';
 import FosasSidebar from '../components/FosasSidebar';
 import FosasMap from '../components/FosasMap';
-import { Spinner } from '@canonical/react-components'; // Import Spinner
+import Loading from '../components/Loading';
 import { contarIndiciosPorFosa } from '../utils/relacionFosaIndicios';
 
 function Fosas() {
@@ -82,11 +82,7 @@ function Fosas() {
   const conteoIndiciosPorFosa = contarIndiciosPorFosa(allIndicios);
 
   if (loading) {
-    return (
-      <div style={{ textAlign: 'center', marginTop: '50px' }}>
-        <Spinner text="Cargando fosas..." />
-      </div>
-    );
+    return <Loading text="Cargando fosas..." />;
   }
 
   return (

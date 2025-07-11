@@ -5,9 +5,11 @@ import IndicioGridItem from '../components/IndicioGridItem';
 import IndiciosFilters from '../components/IndiciosFilters';
 import { Row, Col } from '@canonical/react-components';
 import { useLocation } from 'react-router-dom';
+import Loading from '../components/Loading';
 
 function Indicios() {
   const [indicios, setIndicios] = useState([]);
+  const [loading, setLoading] = useState(true); // Añadido loading
   const [filters, setFilters] = useState({
     tipo_prenda: '',
     color: '',
@@ -38,6 +40,7 @@ function Indicios() {
 
   useEffect(() => {
     const fetchData = async () => {
+      setLoading(true); // Inicia loading
       const summary = await fetchSummaryData();
       const filtered = summary.filter(item => item.type === 'indicios');
 
@@ -58,6 +61,7 @@ function Indicios() {
         : details.filter(item => item !== null);
 
       setIndicios(indiciosFiltrados);
+      setLoading(false); // Finaliza loading
     };
 
     fetchData();
@@ -151,6 +155,10 @@ function Indicios() {
     });
     return Object.entries(fosaMap).map(([id, title]) => ({ id, title }));
   };
+
+  if (loading) {
+    return <Loading text="Cargando indicios..." />;
+  }
 
   return (
     <div className="content-wide">
